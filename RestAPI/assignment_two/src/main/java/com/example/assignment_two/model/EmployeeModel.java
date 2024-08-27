@@ -1,6 +1,7 @@
 package com.example.assignment_two.model;
 
 import com.example.assignment_two.validation.StrongPassword;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class EmployeeModel {
 
     @NotEmpty(message = "Email is mandatory")
     @Email(message = "Email should be valid")
+    @JsonProperty("emailId")
     private final String email;
 
     @StrongPassword
