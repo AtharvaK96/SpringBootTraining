@@ -9,8 +9,8 @@ import java.util.List;
 @Service
 public class EmployeeService {
     List<Employee> employees = new ArrayList<>(List.of(
-            new Employee(1, "Mehvish", "mehvish@gmail.com"),
-            new Employee(2, "Mitali", "mitali@gmail.com")));
+            new Employee(1, "Mehvish", "mehvish@gmail.com", "Mehvish@123"),
+            new Employee(2, "Mitali", "mitali@gmail.com", "Mitali@123")));
 
     public List<Employee> addEmployee(Employee employee) {
         if (employees.stream().noneMatch(emp -> emp.getEmp_id() == employee.getEmp_id())) {
