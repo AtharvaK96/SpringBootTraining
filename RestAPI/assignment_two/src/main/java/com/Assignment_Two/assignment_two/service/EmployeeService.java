@@ -25,7 +25,7 @@ public class EmployeeService {
             throw new IllegalArgumentException("Employee information cannot be null");
         }
 
-        // Check if an employee with the same ID already exists
+
         for (EmployeeInformation employee : employeeModels) {
             if (employee.getEmp_id() == employeeInformation.getEmp_id()) {
                 throw new DuplicateEmployeeIdException("Employee with id " + employeeInformation.getEmp_id() + " already exists");
@@ -40,14 +40,14 @@ public class EmployeeService {
             throw new IllegalArgumentException("Employee information cannot be null");
         }
 
-        // Check if the new ID already exists
+
         boolean idConflict = employeeModels.stream()
                 .anyMatch(emp -> emp.getEmp_id() == employeeInformation.getEmp_id() && emp.getEmp_id() != id);
         if (idConflict) {
             throw new DuplicateEmployeeIdException("Employee with id " + employeeInformation.getEmp_id() + " already exists");
         }
 
-        // Find and update the employee
+
         boolean updated = false;
         for (int i = 0; i < employeeModels.size(); i++) {
             if (employeeModels.get(i).getEmp_id() == id) {
