@@ -32,6 +32,7 @@ public class EmployeeService {
                 .findFirst()
                 .map(emp -> {emp.setEmp_name(employee.getEmp_name());
                     emp.setEmail_id(employee.getEmail_id());
+                    emp.setPassword(employee.getPassword());
                     return true;
                 })
                 .orElse(false);
