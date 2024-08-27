@@ -3,6 +3,7 @@ package com.example.assignment_two.services;
 import com.example.assignment_two.exceptions.EmployeeAlreadyExistsException;
 import com.example.assignment_two.exceptions.EmployeeNotFoundException;
 import com.example.assignment_two.models.Employee;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,9 +16,10 @@ public class EmployeeService {
 
     public EmployeeService() {
         this.employeeList = new ArrayList<>(List.of(
-                new Employee(1,"Sahil","sahil@abc.com","benchmark 1"),
-                new Employee(2,"Bob","bob@abc.com","benchmark 2"),
-                new Employee(3,"john","john@abc.com","benchmark 2")
+//                @Valid
+                new Employee(1,"Sahil","sahil@abc.com","benchmark 1","7865432109",true),
+                new Employee(2,"Bob","bob@abc.com","benchmark 2","7896543210",false),
+                new Employee(3,"john","john@abc.com","benchmark 2","+91-8765432109",true)
         ));
 
     }
@@ -44,13 +46,13 @@ public class EmployeeService {
                      employee1.setName(emp.getName());
                      employee1.setEmail(emp.getEmail());
                      employee1.setCompany(emp.getCompany());
-
+                     employee1.setPhoneNumber(emp.getPhoneNumber());
+                     employee1.setActive(emp.isActive());
                      return employee1;
                  })
                  .orElseThrow(() -> new EmployeeNotFoundException("No such Employee present"));
 
 
-//        employeeList.add(employee);
         return employee;
 
      }

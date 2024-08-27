@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-@Validated
 public class EmployeeController {
     EmployeeService employeeService;
     @Autowired
