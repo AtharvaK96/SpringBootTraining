@@ -1,3 +1,4 @@
+
 package com.Assignment_Two.assignment_two.service;
 
 import com.Assignment_Two.assignment_two.model.EmployeeInformation;
@@ -11,8 +12,8 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private List<EmployeeInformation> employeeModels = new ArrayList<>(List.of(
-            new EmployeeInformation(101, "Heena", "heena@benchmarkit.solutions"),
-            new EmployeeInformation(102, "Zainab", "zainab@benchmarkit.solutions")
+            new EmployeeInformation(101, "Heena", "heena@benchmarkit.solutions", "Abc@1231"),
+            new EmployeeInformation(102, "Zainab", "zainab@benchmarkit.solutions", "Srt@4564")
     ));
 
     public List<EmployeeInformation> show() {
@@ -39,6 +40,14 @@ public class EmployeeService {
             throw new IllegalArgumentException("Employee information cannot be null");
         }
 
+        // Check if the new ID already exists
+        boolean idConflict = employeeModels.stream()
+                .anyMatch(emp -> emp.getEmp_id() == employeeInformation.getEmp_id() && emp.getEmp_id() != id);
+        if (idConflict) {
+            throw new DuplicateEmployeeIdException("Employee with id " + employeeInformation.getEmp_id() + " already exists");
+        }
+
+        // Find and update the employee
         boolean updated = false;
         for (int i = 0; i < employeeModels.size(); i++) {
             if (employeeModels.get(i).getEmp_id() == id) {
@@ -72,3 +81,4 @@ public class EmployeeService {
         return new ArrayList<>(employeeModels);
     }
 }
+

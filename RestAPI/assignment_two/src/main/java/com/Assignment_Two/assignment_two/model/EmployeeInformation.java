@@ -1,5 +1,7 @@
 package com.Assignment_Two.assignment_two.model;
 
+import com.Assignment_Two.assignment_two.validation.ValidateEmployeePassword;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,16 +19,23 @@ import java.util.List;
 
 
 public class EmployeeInformation {
+
     @NotNull(message = "Employee ID cannot be null.")
+
     private final int emp_id;
+    @JsonProperty("Employee Name")
     private final String name;
     @NotEmpty(message = "Email cannot be empty.")
     @Email(message= "Email cannot be empty.")
     private final String email;
+    @ValidateEmployeePassword
+    private final String password;
 
 
 
 
 
-    }
 
+
+
+}
