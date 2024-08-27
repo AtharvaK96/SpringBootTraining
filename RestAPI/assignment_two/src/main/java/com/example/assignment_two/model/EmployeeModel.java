@@ -1,5 +1,6 @@
 package com.example.assignment_two.model;
 
+import com.example.assignment_two.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -16,4 +17,7 @@ public class EmployeeModel {
     @NotEmpty(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private final String email;
+
+    @StrongPassword
+    private final String password;
 }
