@@ -1,15 +1,11 @@
 package com.example.assignment_two.service;
 
+import com.example.assignment_two.exception.UserNotFoundException;
 import com.example.assignment_two.model.EmployeeModel;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-class UserNotFoundException extends RuntimeException {
-    UserNotFoundException(String s) {
-        super(s);
-    }
-}
 
 @Service
 public class EmployeeService {
@@ -31,22 +27,21 @@ public class EmployeeService {
     }
 
     public List<EmployeeModel> updateEmployee(int id, EmployeeModel employeeModel) {
-        for (int i = 0; i < employeeModels.size(); i++) {
-            if (employeeModels.get(i).getId() == id) {
-                employeeModels.set(i, new EmployeeModel(id, employeeModel.getName(), employeeModel.getEmail(), employeeModel.getPassword()));
-                return employeeModels;
-            }
+        boolean isUpdated = employeeModels.stream().filter(e -> e.getId() == id).findFirst().map(e -> {
+            employeeModels.set(employeeModels.indexOf(e), new EmployeeModel(id, employeeModel.getName(), employeeModel.getEmail(), employeeModel.getPassword()));
+            return true;
+        }).orElse(false);
+        if(!isUpdated) {
+            throw new UserNotFoundException("User not found");
         }
-        throw new UserNotFoundException("User not found");
+        return employeeModels;
     }
 
     public List<EmployeeModel> deleteEmployee(int id) {
-        for(int i=0;i<employeeModels.size();i++) {
-            if(employeeModels.get(i).getId()==id) {
-                employeeModels.remove(i);
-                return employeeModels;
-            }
+        boolean isDeleted = employeeModels.removeIf(e -> e.getId() == id);
+        if(!isDeleted) {
+            throw new UserNotFoundException("User not found");
         }
-        throw new UserNotFoundException("User not found");
+        return employeeModels;
     }
 }
