@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 public class AuthorDto {
     private long id;
-    private String authorName;
+    private String name;
     private List<String> bookTitle;
 }
