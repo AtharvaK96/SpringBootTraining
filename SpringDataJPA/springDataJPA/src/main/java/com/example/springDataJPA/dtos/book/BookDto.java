@@ -13,5 +13,6 @@ public class BookDto {
     private String title;
     private Integer price;
     private String language;
-    private Category category;
+    private String author_name;
+    private String category;
 }
