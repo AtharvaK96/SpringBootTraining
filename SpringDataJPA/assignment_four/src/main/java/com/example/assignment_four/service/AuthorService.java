@@ -4,6 +4,7 @@ import ch.qos.logback.core.pattern.Converter;
 import com.example.assignment_four.converter.AuthorConverter;
 import com.example.assignment_four.dto.AuthorDTO;
 import com.example.assignment_four.dto.BookDTO;
+import com.example.assignment_four.mapper.AuthorMapper;
 import com.example.assignment_four.model.Author;
 import com.example.assignment_four.model.Book;
 import com.example.assignment_four.repository.AuthorRepository;
@@ -23,13 +24,13 @@ public class AuthorService {
     AuthorRepository authorRepository;
 
     @Autowired
-    AuthorConverter authorConverter;
+    AuthorMapper authorMapper;
 
     public Page<AuthorDTO> displayAuthors(int pageNumber, int pageSize) {
         Sort sort=Sort.by(Sort.Direction.ASC, "name");
         Pageable pageable= PageRequest.of(pageNumber, pageSize, sort);
         Page<Author> authorList =authorRepository.findAll(pageable);
-        List<AuthorDTO> authorDTOList=authorList.stream().map(authorConverter:: toAuthorDTO).toList();
+        List<AuthorDTO> authorDTOList=authorList.stream().map(authorMapper:: toAuthorDTO).toList();
         return new PageImpl<>(authorDTOList);
     }
     public Optional<Author> findBooksByAuthor(String name) {
