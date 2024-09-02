@@ -1,5 +1,6 @@
 package com.example.springDataJPA.controllers;
 
+import com.example.springDataJPA.dtos.book.BookResponseDto;
 import com.example.springDataJPA.models.Book;
 import com.example.springDataJPA.services.BooksService;
 import jakarta.validation.Valid;
@@ -46,6 +47,10 @@ public class BooksController {
     @GetMapping("/priceLessThan")
     public List<Book> searchBookByPriceLessThan(@RequestParam("price") Integer price){
         return booksService.findBooksPriceLessThan(price);
+    }
+    @GetMapping("/getBook")
+    public BookResponseDto getSingleBook(@RequestParam("id") Integer id){
+        return booksService.getSingleBook(id);
     }
 
 

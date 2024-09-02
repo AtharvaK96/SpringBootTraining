@@ -9,6 +9,7 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 //    Book findByName
     Book findByTitle(String title);
     List<Book> findByPriceLessThan(Integer price);
+    List<Book> findByAuthorId(Integer id);
 
 
 }

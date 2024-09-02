@@ -1,6 +1,9 @@
 package com.example.springDataJPA.services;
 
+import com.example.springDataJPA.dtos.author.AuthorDto;
+import com.example.springDataJPA.dtos.book.BookResponseDto;
 import com.example.springDataJPA.exceptions.BookNotFoundException;
+import com.example.springDataJPA.models.Author;
 import com.example.springDataJPA.models.Book;
 import com.example.springDataJPA.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,22 @@ public class BooksService {
     public List<Book> getAllBooks(){
        return bookRepository.findAll();
     }
+
+    public BookResponseDto getSingleBook(Integer id){
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book does not exists"));
+//        return mapToBookDto(book);
+        Author author = book.getAuthor();
+        AuthorDto authorDto = new AuthorDto(author.getId(), author.getName(), author.getNationality());
+        return new BookResponseDto(book.getId(),
+               book.getTitle(),
+               book.getPrice(),
+               book.getLanguage(),
+               authorDto,
+               book.getCategory());
+//        return book;
+
+    }
+
      public Book addBook(Book book){
        return bookRepository.save(book);
      }
@@ -53,7 +72,20 @@ public class BooksService {
 
 
 //    --------------------------------------------------------
-//private Book mapToBook
+//private BookDto mapToBookDto(Book book){
+//    BookDto bookDto = new BookDto();
+//    bookDto.setId(book.getId());
+//    bookDto.setTitle(book.getTitle());
+//    bookDto.setPrice(book.getPrice());
+//    bookDto.setLanguage(book.getLanguage());
+//    bookDto.setAuthor(book.getAuthor());
+//    bookDto.setCategory(book.getCategory());
+//
+//    return bookDto;
+//}
+
+
+
 
 
 
