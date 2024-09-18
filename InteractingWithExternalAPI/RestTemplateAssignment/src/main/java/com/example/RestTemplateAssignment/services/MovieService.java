@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service
-//@AllArgsConstructor
 public class MovieService {
 
     private final RestTemplate restTemplate;
@@ -26,11 +25,7 @@ public class MovieService {
         String api = "https://freetestapi.com/api/v1/movies";
         Movie[] movies = restTemplate.getForObject(api, Movie[].class);
         if (movies == null) {
-            return PaginationResponse.builder()
-                    .movies(new ArrayList<>())
-                    .lastPage(true)
-                    .totalPages(0)
-                    .build();
+            return paginateMovies(new ArrayList<>(),page,size);
         }
         return paginateMovies(Arrays.asList(movies),page,size) ;
     }
@@ -40,11 +35,7 @@ public class MovieService {
         String api = "https://freetestapi.com/api/v1/movies";
         Movie[] movies = restTemplate.getForObject(api, Movie[].class);
         if (movies == null) {
-            return PaginationResponse.builder()
-                    .movies(new ArrayList<>())
-                    .lastPage(true)
-                    .totalPages(0)
-                    .build();
+            return paginateMovies(new ArrayList<>(),page,size);
         }
         Stream<Movie> filteredByGenre = Arrays.stream(movies)
                 .filter(movie -> new HashSet<>(movie.getGenre()).containsAll(genreList));
@@ -71,11 +62,7 @@ public class MovieService {
         String api = "https://freetestapi.com/api/v1/movies?search=" + name;
         Movie[] searchedMovies = restTemplate.getForObject(api, Movie[].class);
         if (searchedMovies == null) {
-            return PaginationResponse.builder()
-                    .movies(new ArrayList<>())
-                    .lastPage(true)
-                    .totalPages(0)
-                    .build();
+            return paginateMovies(new ArrayList<>(),page,size);
         }
         return paginateMovies(Arrays.asList(searchedMovies),page, size) ;
 
@@ -89,6 +76,7 @@ public class MovieService {
                 .movies( movieList.subList(start, end))
                 .lastPage(end >= movieList.size())
                 .totalPages((movieList.size() + size - 1) / size)
+                .currentPage(page)
                 .build();
     }
 

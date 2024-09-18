@@ -11,4 +11,5 @@ public class PaginationResponse {
     List<Movie> movies;
     boolean lastPage;
     Integer totalPages;
+    Integer currentPage;
 }
