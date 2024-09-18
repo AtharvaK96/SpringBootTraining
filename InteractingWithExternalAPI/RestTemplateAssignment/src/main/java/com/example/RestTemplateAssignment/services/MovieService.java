@@ -1,15 +1,14 @@
 package com.example.RestTemplateAssignment.services;
 
 import com.example.RestTemplateAssignment.models.Movie;
-import lombok.AllArgsConstructor;
+import com.example.RestTemplateAssignment.models.PaginationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
+import java.util.stream.Stream;
 
 @Service
 //@AllArgsConstructor
@@ -22,49 +21,77 @@ public class MovieService {
         this.restTemplate = restTemplate;
     }
 
-    public List<Movie> getAllMovies() {
+    public PaginationResponse getAllMovies(int page, int size) {
 
         String api = "https://freetestapi.com/api/v1/movies";
         Movie[] movies = restTemplate.getForObject(api, Movie[].class);
         if (movies == null) {
-            return new ArrayList<>();
+            return PaginationResponse.builder()
+                    .movies(new ArrayList<>())
+                    .lastPage(true)
+                    .totalPages(0)
+                    .build();
         }
-        return Arrays.asList(movies);
+        return paginateMovies(Arrays.asList(movies),page,size) ;
     }
 
-    public List<Movie> getMovieByGenre(String genre, String sortOrder) {
+    public PaginationResponse getMovieByGenre(String genre, String sortOrder, int page, int size) {
+        List<String> genreList = Arrays.stream(genre.split(",")).toList();
         String api = "https://freetestapi.com/api/v1/movies";
         Movie[] movies = restTemplate.getForObject(api, Movie[].class);
         if (movies == null) {
-            return new ArrayList<>();
+            return PaginationResponse.builder()
+                    .movies(new ArrayList<>())
+                    .lastPage(true)
+                    .totalPages(0)
+                    .build();
         }
-        List<Movie> filteredByGenre;
+        Stream<Movie> filteredByGenre = Arrays.stream(movies)
+                .filter(movie -> new HashSet<>(movie.getGenre()).containsAll(genreList));
+        List<Movie> sortedList;
+
         if (sortOrder.trim().equalsIgnoreCase("desc")) {
-            filteredByGenre = Arrays.stream(movies)
-                    .filter(movie -> movie.getGenre().contains(genre))
+            sortedList = filteredByGenre
                     .sorted((m1, m2) -> m2.getTitle().compareTo(m1.getTitle()))
                     .toList();
 
         } else {
-            filteredByGenre = Arrays.stream(movies)
-                    .filter(movie -> movie.getGenre().contains(genre))
+            sortedList = filteredByGenre
                     .sorted(Comparator.comparing(Movie::getTitle))
                     .toList();
 
         }
-        return filteredByGenre;
+
+
+        return paginateMovies(sortedList, page, size);
     }
 
 
-    public List<Movie> searchMovie(String name) {
+    public PaginationResponse searchMovie(String name, int page, int size) {
         String api = "https://freetestapi.com/api/v1/movies?search=" + name;
         Movie[] searchedMovies = restTemplate.getForObject(api, Movie[].class);
         if (searchedMovies == null) {
-            return new ArrayList<>();
+            return PaginationResponse.builder()
+                    .movies(new ArrayList<>())
+                    .lastPage(true)
+                    .totalPages(0)
+                    .build();
         }
-        return Arrays.asList(searchedMovies);
+        return paginateMovies(Arrays.asList(searchedMovies),page, size) ;
 
 
     }
+
+    private PaginationResponse paginateMovies(List<Movie> movieList, int page, int size) {
+        int start = Math.min(page * size, movieList.size());
+        int end = Math.min(start + size, movieList.size());
+        return PaginationResponse.builder()
+                .movies( movieList.subList(start, end))
+                .lastPage(end >= movieList.size())
+                .totalPages((movieList.size() + size - 1) / size)
+                .build();
+    }
+
+
 
 }
