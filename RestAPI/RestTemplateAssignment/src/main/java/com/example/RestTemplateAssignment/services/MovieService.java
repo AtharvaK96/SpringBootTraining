@@ -17,13 +17,17 @@ public class MovieService {
         return restTemplate.getForObject("https://freetestapi.com/api/v1/movies/" + id, Movie.class);
     }
 
-    public List<Movie> getMovies() {
+    public List<Movie> getMovies(int page, int size) {
         Movie[] moviesArray = restTemplate.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class);
-        return List.of(moviesArray);
+        List<Movie> moviesList = List.of(moviesArray);
+        return moviesList.stream()
+                .skip((page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     public List<Movie> searchMoviesByGenre(String genre) {
-        List<Movie> movies = getMovies();
+        List<Movie> movies = List.of(restTemplate.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class));
         return movies.stream().filter(movie -> movie.getGenre().contains(genre)).toList();
     }
 
@@ -44,4 +48,13 @@ public class MovieService {
             return filteredMovies;
         }
     }
+
+    public List<Movie> searchMoviesByGenres(List<String> genres) {
+        List<Movie> movies = List.of(restTemplate.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class));
+        ;
+        return movies.stream()
+                .filter(movie -> genres.stream().allMatch(genre -> movie.getGenre().contains(genre)))
+                .toList();
+    }
+
 }

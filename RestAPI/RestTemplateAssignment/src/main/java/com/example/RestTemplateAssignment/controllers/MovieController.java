@@ -17,13 +17,14 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public Movie getMovie(@PathVariable int id){
+    public Movie getMovie(@PathVariable int id) {
         return movieService.getMovie(id);
     }
 
-    @GetMapping
-    public List<Movie> getMovies(){
-        return movieService.getMovies();
+    @GetMapping("/getAllMovies")
+    public List<Movie> getMovies(@RequestParam(defaultValue = "1") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        return movieService.getMovies(page, size);
     }
 
     @GetMapping("/searchMoviesByGenre")
@@ -32,7 +33,12 @@ public class MovieController {
     }
 
     @GetMapping("/searchMoviesByGenreAndSort")
-    public List<Movie> MoviesByGenreAndSort(@RequestParam String genre, @RequestParam String sortOrder){
+    public List<Movie> MoviesByGenreAndSort(@RequestParam String genre, @RequestParam String sortOrder) {
         return movieService.searchMoviesByGenreAndSort(genre, sortOrder);
+    }
+
+    @GetMapping("/searchMoviesByGenres")
+    public List<Movie> searchMoviesByGenres(@RequestParam List<String> genres) {
+        return movieService.searchMoviesByGenres(genres);
     }
 }
