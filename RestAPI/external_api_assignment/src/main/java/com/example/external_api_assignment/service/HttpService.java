@@ -5,10 +5,8 @@ import com.example.external_api_assignment.model.Movie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -19,20 +17,23 @@ public class HttpService {
         return movie;
     }
 
-    public List<Movie> getAllMovies() {
+    public List<Movie> getAllMovies(int page, int size) {
         Movie[] movies=restTemplate.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class);
         if(movies!=null) {
-            return List.of(movies);
+            int totalMovies = movies.length;
+            int startIndex = page * size;
+            int endIndex = Math.min(startIndex + size, totalMovies);
+            return List.of(movies).subList(startIndex, endIndex);
         }
         throw new MovieNotFoundException("Movies not found");
     }
 
-    public List<Movie> getMoviesByGenre(String genre) {
+    public List<Movie> getMoviesByGenre(List<String> genres) {
         Movie[] movies = restTemplate.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class);
         List<Movie> movieList= Stream.of(movies)
-                .filter(n -> n.getGenre().contains(genre)).toList();
+                .filter(movie -> genres.stream().allMatch(genre -> movie.getGenre().contains(genre))).toList();
         if(movieList.isEmpty()) {
-            throw new MovieNotFoundException("Movies not found with genre " + genre);
+            throw new MovieNotFoundException("Movies not found with genre " + genres);
         }
         return movieList;
     }

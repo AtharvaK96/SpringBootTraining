@@ -24,17 +24,17 @@ public class RequestController {
     }
 
     @GetMapping("/getAllMovies")
-    public List<Movie> getAllMovies() {
-        return httpService.getAllMovies();
+    public List<Movie> getAllMovies(int page, int size) {
+        return httpService.getAllMovies(page, size);
     }
 
     @GetMapping("/getMoviesByGenre")
-    public List<Movie> getMoviesByGenre(@RequestParam String genre) {
-        return httpService.getMoviesByGenre(genre);
+    public List<Movie> getMoviesByGenre(@RequestParam List<String> genres) {
+        return httpService.getMoviesByGenre(genres);
     }
 
     @GetMapping("/orderByRating")
-    public List<Movie> orderByRating(@RequestParam String order) {
+    public List<Movie> orderByRating(@RequestParam(defaultValue = "ascending") String order) {
         return httpService.orderByRating(order);
     }
 }
