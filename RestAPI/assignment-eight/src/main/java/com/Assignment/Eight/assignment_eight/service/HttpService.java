@@ -29,7 +29,7 @@ public class HttpService {
         Movie[] myMovie = template.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class);
         if (myMovie != null) {
             return List.of(myMovie).stream()
-                    .filter(n -> n.getGenre().contains(genre))  // Filter based on the user-provided genre
+                    .filter(n -> n.getGenre().contains(genre))  
                     .collect(Collectors.toList());
         }
         return List.of();
