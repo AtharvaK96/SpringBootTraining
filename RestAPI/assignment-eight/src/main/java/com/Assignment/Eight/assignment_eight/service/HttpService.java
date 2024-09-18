@@ -24,12 +24,12 @@ public class HttpService {
         return List.of(myMovie);
     }
 
-    public List<Movie> getMovieByGenre() {
+    public List<Movie> getMovieByGenre(String genre) {
         RestTemplate template = new RestTemplate();
         Movie[] myMovie = template.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class);
         if (myMovie != null) {
             return List.of(myMovie).stream()
-                    .filter(n -> n.getGenre().contains("Thriller"))
+                    .filter(n -> n.getGenre().contains(genre))  // Filter based on the user-provided genre
                     .collect(Collectors.toList());
         }
         return List.of();
@@ -50,5 +50,24 @@ public class HttpService {
         }
     }
 
+    public List<Movie> getAllMovies(int page, int size) {
+        RestTemplate template = new RestTemplate();
+        Movie[] myMovie = template.getForObject("https://freetestapi.com/api/v1/movies", Movie[].class);
+        List<Movie> movieList = List.of(myMovie);
+
+
+        return movieList.stream()
+                .skip((page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
     }
+
+
+    public List<Movie> searchMoviesByGenres(List<String> genres) {
+        List<Movie> movies = getAllMovies();
+        return movies.stream()
+                .filter(movie -> genres.stream().allMatch(genre -> movie.getGenre().contains(genre)))
+                .toList();
+    }
+}
 
