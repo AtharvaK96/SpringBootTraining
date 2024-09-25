@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +42,17 @@ public class EmployeeController {
                         .body("Error: " + e.getMessage());
             }
         }
+    @GetMapping("/{id}/details")
+    public String getEmployeeDetails(@PathVariable Long id, Model model) {
+        Emploi employee = employeeService.findEmployeeById(id);
+        if (employee != null) {
+            model.addAttribute("employee", employee);
+            return "employee-details";
+        } else {
+            model.addAttribute("errorMessage", "Employee not found.");
+            return "error";
+        }
+    }
 
     @GetMapping("/{id}/photo")
         public ResponseEntity<byte[]> getEmployeePhoto(@PathVariable Long id) {
