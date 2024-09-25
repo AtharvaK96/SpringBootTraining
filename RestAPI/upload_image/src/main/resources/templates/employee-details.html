@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+<h1>Employee Details</h1>
+
+<div>
+    <p><strong>Name:</strong> <span th:text="${employee.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${employee.email}"></span></p>
+    <p><strong>Photo:</strong></p>
+    <img th:src="@{'/uploads/' + ${employee.photoFilePath}}" alt="Employee Photo" width="200" height="200"/>
+</div>
+</body>
+</html>
